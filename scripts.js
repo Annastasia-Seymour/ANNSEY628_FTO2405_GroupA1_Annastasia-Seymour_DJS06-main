@@ -102,4 +102,56 @@ console.log(mapProvinceToName());
 console.log('Products:', products.map(product => product.product).join(', '));
 
 // 2. Filter by Name Length
+console.log(
+  "Names longer than 5 characters: ",
+  products.filter( product => product.product.length > 5).map(product => product.product).join(', ')
+);
+
+ //3. Price manipulation
+ console.log(
+   "Total Price: R",
+   products
+   .map(product => {
+    // Convert price to a number if it's a valid string, otherwise use 0
+    const price = typeof product.price === 'string' && product.price.trim() !== '' 
+      ? parseFloat(product.price) 
+      : typeof product.price === 'number' ? product.price : 0;
+    return price;
+  })
+  .reduce((total, price) => total + price, 0) // Sum up all the valid prices
+);
+
+// 4. Concatenate Products Names
+console.log(
+  'Concatenated Product Names:',
+  products.reduce((acc, product) => acc + product.product + ' ', '').trim()
+);
+
+
+// 5. Find Extremes in Prices
+console.log(
+  'Price Extremes:',
+  (() => {
+    return products.reduce((acc, product) => {
+      const price = typeof product.price === 'string' && product.price.trim() !== ''
+        ? parseFloat(product.price)
+        : typeof product.price === 'number' ? product.price : null;
+
+      if (price != null) { // Consider only valid prices
+        acc.highest = Math.max(acc.highest, price);
+        acc.lowest = Math.min(acc.lowest, price);
+      }
+      return acc;
+    }, { highest: -Infinity, lowest: Infinity }) // Initialize extremes
+  })()
+);
+
+// 6. Object Transformation 
+console.log(
+  'Transformed Object:',
+  Object.fromEntries(
+    products.map(product => [product.product, { name: product.product, cost: typeof product.price === 'string' ? parseFloat(product.price) : product.price }])
+  )
+);
+
 
